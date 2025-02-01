@@ -18,7 +18,7 @@ function App() {
     };
 
     ws.onmessage = (event) => {
-      console.log('Received message:', event.data);
+      console.log('Received message 1:', event.data);
     };
 
     ws.onclose = () => {
