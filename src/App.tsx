@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScanSearch } from 'lucide-react';
 
 function App() {
@@ -9,6 +9,30 @@ function App() {
     // Handle URL submission here
     console.log('Checking URL:', url);
   };
+
+  useEffect(() => {
+    const ws = new WebSocket('ws://localhost:8080');
+
+    ws.onopen = () => {
+      console.log('Connected to WebSocket');
+    };
+
+    ws.onmessage = (event) => {
+      console.log('Received message:', event.data);
+    };
+
+    ws.onclose = () => {
+      console.log('Disconnected from WebSocket');
+    };
+
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
+    return () => {
+      ws.close();
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-navy-900">
