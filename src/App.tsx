@@ -3,6 +3,7 @@ import { Loader2 } from "lucide-react";
 import SearchInput from "./components/SearchInput";
 import { motion } from "framer-motion";
 import ProcessUrlList from "./components/UrlsList";
+import ResultsList from "./ResultsList";
 
 interface UrlItem {
   id: number;
@@ -16,13 +17,13 @@ const urlList: UrlItem[] = [
   { id: 3, url: "https://example.com/file3", progress: 100 },
   { id: 4, url: "https://example.com/file4", progress: 10 },
 ];
-import SearchInput from './SearchInput';
-import ResultsList from './ResultsList';
 
 function App() {
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [showProgress, setShowProgress] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+
 
   useEffect(() => {
     if (url) {
@@ -31,6 +32,11 @@ function App() {
         setLoading(false);
         setShowProgress(true);
       }, 2000); // Simulating API call delay
+
+      setTimeout(() => {
+        setShowProgress(false);
+        setShowResults(true);
+      }, 5000);
     }
   }, [url]);
 
@@ -75,7 +81,7 @@ function App() {
       {/* Main Layout - Left (Progress List) & Right (Animated Loader) */}
       <div className="w-full max-w-6xl flex mt-70">
         {/* Progress List on Left */}
-        {!loading && showProgress && (
+        {(!loading && showProgress || showResults  )&& (
           <motion.div
             className="w-1/2 p-4"
             initial={{ opacity: 0, x: -30 }}
@@ -97,6 +103,11 @@ function App() {
             <Loader2 className="animate-spin w-10 h-10 text-blue-400" />
           </motion.div>
         )}
+
+        {showResults && (
+          <ResultsList />
+        )}
+        
       </div>
 
       {/* Background Elements */}
