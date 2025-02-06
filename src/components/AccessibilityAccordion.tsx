@@ -84,7 +84,7 @@ export const AccessibilityAccordion: React.FC<AccordionProps> = ({
       </button>
 
       <div
-        className={`overflow-hidden transition-all duration-200 ${
+        className={`overflow-hidden trasition-all duration-200 ${
           isOpen ? 'max-h-[2000px]' : 'max-h-0'
         }`}
       >

@@ -230,15 +230,15 @@ const accessibilityData = {
         color: COLORS[key as keyof typeof COLORS],
       }));
     return (
-        <div className="min-h-screen max-w-2xl mx-auto p-6 bg-gray-900 rounded-2xl shadow-xl text-white">
+        <div className="max-w-2xl mx-auto p-6 bg-gray-900 rounded-2xl shadow-xl text-white">
             <div className="max-w-4xl mx-auto">
                 <h1 className="text-2xl font-bold text-white-800 mb-6">
                     Accessibility Analysis
                 </h1>
 
-                <div className="bg-white rounded-lg p-6 mb-8 shadow-sm">
+                {/* <div className="bg-white rounded-lg p-6 mb-8 shadow-sm">
                     <PieChart data={pieData} />
-                </div>
+                </div> */}
 
                 <div className="space-y-4">
                     {Object.entries(accessibilityData)
