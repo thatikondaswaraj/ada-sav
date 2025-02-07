@@ -17,6 +17,10 @@ const urlList: UrlItem[] = [
   { id: 2, url: "https://example.com/file2", progress: 40 },
   { id: 3, url: "https://example.com/file3", progress: 100 },
   { id: 4, url: "https://example.com/file4", progress: 10 },
+  { id: 1, url: "https://example.com/file5", progress: 80 },
+  { id: 2, url: "https://example.com/file6", progress: 70 },
+  { id: 3, url: "https://example.com/file7", progress: 100 },
+  { id: 4, url: "https://example.com/file8", progress: 35 },
 ];
 
 function App() {
@@ -70,7 +74,7 @@ function App() {
           url
             ? {
               top: "1rem",
-              left: "1rem",
+              left: "auto",
               translateX: "0",
               translateY: "0",
               scale: 0.9,
@@ -116,7 +120,15 @@ function App() {
         )}
 
         {showResults && (
-          <ResultsList />
+          <motion.div
+            className="w-1/2 p-4"
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+          >
+            <ResultsList />
+
+          </motion.div>
         )}
 
       </div>

@@ -41,9 +41,9 @@ const getStatusIcon = (progress: number) => {
 const ProcessUrlList: React.FC = (props: any) => {
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-gray-900 rounded-2xl shadow-xl text-white">
-      <h2 className="text-xl font-semibold mb-4">Processing URLs</h2>
-      <ul className="space-y-4">
+    <div className="max-w-2xl mx-auto p-1 bg-gray-900 rounded-2xl shadow-xl text-white">
+      <h2 className="text-xl font-semibold p-4">Processing URLs</h2>
+      <ul className="space-y-4 p-4 overflow-y-auto h-[300px] scrollbar-thin">
         {props.urlsList.map(({ id, url, progress }: any) => (
           <li key={id} className="flex items-center gap-4 p-3 bg-gray-800 rounded-lg shadow-md">
             {getStatusIcon(progress)}

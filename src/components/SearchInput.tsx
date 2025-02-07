@@ -39,7 +39,7 @@ const SearchInput = (props: any) => {
   };
 
   return (
-    <div className="w-full max-w-[800px] px-8">
+    <div className="w-full max-w-[800px] px-8 mx-auto">
       {initiallayout && (
         <div>
           <div className="text-center mb-6">
