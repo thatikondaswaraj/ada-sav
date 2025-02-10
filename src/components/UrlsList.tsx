@@ -40,12 +40,37 @@ const getStatusIcon = (progress: number) => {
 
 const ProcessUrlList: React.FC = (props: any) => {
 
+const [selectedUrl, setSelectedUrl] = useState<string>("");
+const handleItemClick = (id: string, progress: number) => {
+  if (progress !== 100) return;
+
+  setSelectedUrl(id);
+};
+
+const getItemClasses = (id: string, progress: number) => {
+  const baseClasses = "flex items-center gap-4 p-3 bg-gray-800 rounded-lg shadow-md transition-colors duration-200";
+  
+  if (progress !== 100) {
+    return `${baseClasses} opacity-75 cursor-not-allowed`;
+  }
+  
+  if (selectedUrl == id) {
+    return `${baseClasses} bg-blue-900 border border-blue-500 cursor-pointer`;
+  }
+  
+  return `${baseClasses} hover:bg-gray-700 cursor-pointer`;
+};
+
   return (
     <div className="max-w-2xl mx-auto p-1 bg-gray-900 rounded-2xl shadow-xl text-white">
       <h2 className="text-xl font-semibold p-4">Processing URLs</h2>
-      <ul className="space-y-4 p-4 overflow-y-auto h-[300px] scrollbar-thin">
+      <ul className="space-y-4 p-4 overflow-y-auto h-[400px] scrollbar-thin">
         {props.urlsList.map(({ id, url, progress }: any) => (
-          <li key={id} className="flex items-center gap-4 p-3 bg-gray-800 rounded-lg shadow-md">
+          <li key={id} className="flex items-center gap-4 p-3 bg-gray-800 rounded-lg shadow-md"
+          onClick={() => handleItemClick(id, progress)}
+            className={getItemClasses(id, progress)}
+            role={progress === 100 ? "button" : undefined}
+            tabIndex={progress === 100 ? 0 : undefined}>
             {getStatusIcon(progress)}
             <div className="flex-grow">
               <p className="text-sm truncate max-w-xs">{url}</p>

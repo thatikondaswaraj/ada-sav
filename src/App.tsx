@@ -17,10 +17,10 @@ const urlList: UrlItem[] = [
   { id: 2, url: "https://example.com/file2", progress: 40 },
   { id: 3, url: "https://example.com/file3", progress: 100 },
   { id: 4, url: "https://example.com/file4", progress: 10 },
-  { id: 1, url: "https://example.com/file5", progress: 80 },
-  { id: 2, url: "https://example.com/file6", progress: 70 },
-  { id: 3, url: "https://example.com/file7", progress: 100 },
-  { id: 4, url: "https://example.com/file8", progress: 35 },
+  { id: 5, url: "https://example.com/file5", progress: 80 },
+  { id: 6, url: "https://example.com/file6", progress: 70 },
+  { id: 7, url: "https://example.com/file7", progress: 100 },
+  { id: 8, url: "https://example.com/file8", progress: 35 },
 ];
 
 function App() {
@@ -28,22 +28,26 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [showProgress, setShowProgress] = useState(false);
   const [showResults, setShowResults] = useState(false);
-
+  const [fetchResults, setFetchResults] = useState(true);
 
   useEffect(() => {
-    if (url) {
+    if (url && fetchResults) {
       setLoading(true);
       setTimeout(() => {
+        if(!fetchResults) return;
+
         setLoading(false);
         setShowProgress(true);
       }, 4000); // Simulating API call delay
 
       setTimeout(() => {
+        if(!fetchResults) return;
+
         setShowProgress(false);
         setShowResults(true);
       }, 5000);
     }
-  }, [url]);
+  }, [url, fetchResults]);
 
   useEffect(() => {
     const ws = new WebSocket("ws://localhost:8080");
@@ -57,7 +61,16 @@ function App() {
   }, []);
 
   const handleUrlSet = (url: string) => {
-    setUrl(url)
+    setUrl(url);
+    setFetchResults(!!url);
+  }
+
+  const handleBackEvent = () => {
+    setUrl("");
+    setLoading(false);
+    setShowProgress(false);
+    setShowResults(false);
+    setFetchResults(false);
   }
 
   return (
@@ -84,7 +97,7 @@ function App() {
         transition={{ duration: 0.5, ease: "easeInOut" }}
         className="absolute w-full max-w-4xl"
       >
-        <SearchInput searchedUrl={(url: string) => handleUrlSet(url) }/>
+        <SearchInput searchedUrl={(url: string) => handleUrlSet(url)} onBack={handleBackEvent} />
       </motion.div>
 
       {loading && (
@@ -98,7 +111,7 @@ function App() {
         {/* Progress List on Left */}
         {(!loading && showProgress || showResults) && (
           <motion.div
-            className="w-1/2 p-4"
+            className="w-1/3 p-4"
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
@@ -110,7 +123,7 @@ function App() {
         {/* Animated Loader on Right */}
         {showProgress && (
           <motion.div
-            className="w-1/2 flex items-center justify-center"
+            className="w-2/3 flex items-center justify-center"
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
@@ -121,7 +134,7 @@ function App() {
 
         {showResults && (
           <motion.div
-            className="w-1/2 p-4"
+            className="w-2/3 p-4"
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}

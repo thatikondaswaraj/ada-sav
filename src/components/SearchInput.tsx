@@ -20,6 +20,11 @@ const SearchInput = (props: any) => {
     }
   };
 
+  const handleBack = () => {
+    setInitiallayout(true);
+    props.onBack();
+  };
+
   const handleCheck = () => {
     if (isValidUrl(url)) {
       if (!previousSearches.includes(url)) {
@@ -101,20 +106,21 @@ const SearchInput = (props: any) => {
           <div className="relative flex-grow">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
             <input
+              disabled
               ref={inputRef}
               type="text"
               placeholder="Enter your website URL..."
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               onFocus={() => setShowDropdown(previousSearches.length > 0)}
-              className="w-full pl-12 pr-4 py-4 border-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-12 pr-4 py-4 border-none focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-75"
             />
           </div>
           <button
-            onClick={handleCheck}
+            onClick={handleBack}
             className="bg-blue-600 text-white px-8 py-4 hover:bg-blue-700 transition-colors"
           >
-            Scan
+            Back
           </button>
         </div>
       )
