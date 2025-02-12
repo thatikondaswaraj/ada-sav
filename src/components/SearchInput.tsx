@@ -1,14 +1,18 @@
 import { useState, useRef } from "react";
-import { Search, ScanSearch } from "lucide-react";
+import { Search } from "lucide-react";
 import ScannerIcon from "./ScannerIcon";
 
-const SearchInput = (props: any) => {
+interface SearchInputProps {
+  searchedUrl: (url: string) => void;
+  onBack: () => void;
+}
+
+const SearchInput: React.FC<SearchInputProps> = ({ searchedUrl, onBack }) => {
   const [initiallayout, setInitiallayout] = useState(true);
   const [url, setUrl] = useState("https://wave.webaim.org/");
   const [previousSearches, setPreviousSearches] = useState<string[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-
   const [isFocused, setIsFocused] = useState(false);
 
   const isValidUrl = (str: string) => {
@@ -22,25 +26,19 @@ const SearchInput = (props: any) => {
 
   const handleBack = () => {
     setInitiallayout(true);
-    props.onBack();
+    onBack();
   };
 
   const handleCheck = () => {
     if (isValidUrl(url)) {
       if (!previousSearches.includes(url)) {
-        setPreviousSearches([url, ...previousSearches].slice(0, 5)); // Store last 5 searches
+        setPreviousSearches([url, ...previousSearches].slice(0, 5));
       }
-      props.searchedUrl(url);
+      searchedUrl(url);
       setInitiallayout(false);
     } else {
       alert("Please enter a valid URL.");
     }
-  };
-
-  const handleSelect = (selectedUrl: string) => {
-    setUrl(selectedUrl);
-    setShowDropdown(false);
-    inputRef.current?.focus();
   };
 
   return (
@@ -48,24 +46,23 @@ const SearchInput = (props: any) => {
       {initiallayout && (
         <div>
           <div className="text-center mb-6">
-            <div className="inline-block animate-float mb-2">
-              {/* <div className="bg-blue-50 p-6 rounded-full"> */}
+            <div className="inline-block mb-2">
               <ScannerIcon className="w-12 h-12 text-blue-600" />
-              {/* </div> */}
             </div>
-            <h1 className="text-3xl font-bold text-gray-600 mb- tracking-tight">
+            <h1 className="text-3xl font-bold text-gray-600 mb-2 tracking-tight">
               ADAWatch
             </h1>
-            <p text-sm text-gray-500>Web accessibility and ADA compliance, elegantly streamlined.</p>
-
+            <p className="text-sm text-gray-500">
+              Web accessibility and ADA compliance, elegantly streamlined.
+            </p>
           </div>
 
           <div className="bg-white rounded-2xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-gray-100">
-            {/* <form onSubmit={handleSubmit}> */}
             <div className="relative">
               <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-                <Search className={`h-5 w-5 transition-colors duration-200 
-                        ${isFocused ? 'text-blue-600' : 'text-gray-400'}`} />
+                <Search className={`h-5 w-5 transition-colors duration-200 ${
+                  isFocused ? 'text-blue-600' : 'text-gray-400'
+                }`} />
               </div>
 
               <div className="flex gap-3">
@@ -76,19 +73,20 @@ const SearchInput = (props: any) => {
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   onFocus={() => setIsFocused(true)}
+                  onBlur={() => setIsFocused(false)}
                   className="flex-1 pl-12 pr-4 py-4 text-base bg-blue-50 text-gray-800 
-                                 placeholder-gray-400 rounded-xl border border-blue-100
-                                 focus:border-blue-200 focus:ring-2 focus:ring-blue-100 
-                                 outline-none transition-all duration-200"
+                           placeholder-gray-400 rounded-xl border border-blue-100
+                           focus:border-blue-200 focus:ring-2 focus:ring-blue-100 
+                           outline-none transition-all duration-200"
                 />
 
                 <button
                   onClick={handleCheck}
                   className="px-8 py-4 text-base font-semibold whitespace-nowrap
-                                 text-white bg-blue-600 rounded-xl hover:bg-blue-700 
-                                 transition-all duration-200 focus:outline-none focus:ring-2 
-                                 focus:ring-blue-200 disabled:opacity-50 disabled:cursor-not-allowed
-                                 shadow-sm hover:shadow-md"
+                           text-white bg-blue-600 rounded-xl hover:bg-blue-700 
+                           transition-all duration-200 focus:outline-none focus:ring-2 
+                           focus:ring-blue-200 disabled:opacity-50 disabled:cursor-not-allowed
+                           shadow-sm hover:shadow-md"
                   disabled={!url.trim()}
                 >
                   Start Scanning
@@ -96,8 +94,9 @@ const SearchInput = (props: any) => {
               </div>
             </div>
 
-            <p className="text-sm text-gray-500 mt-4">Effortlessly identify issues, implement solutions, and achieve compliance, all just a click away.</p>
-            {/* </form> */}
+            <p className="text-sm text-gray-500 mt-4">
+              Effortlessly identify issues, implement solutions, and achieve compliance, all just a click away.
+            </p>
           </div>
         </div>
       )}
@@ -123,11 +122,9 @@ const SearchInput = (props: any) => {
             Back
           </button>
         </div>
-      )
-      }
+      )}
     </div>
-  )
-
+  );
 };
 
 export default SearchInput;

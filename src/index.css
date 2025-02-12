@@ -25,3 +25,8 @@
       background-color: #94A3B8;
     }
   }
+
+  .top-pos {
+    position: absolute;
+    top: 96px;
+  }

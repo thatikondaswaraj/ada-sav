@@ -1,10 +1,8 @@
 import { AccessibilityAccordion } from "./components/AccessibilityAccordion";
-import { PieChart } from "./components/PieChart";
 import { PieChartAnalysis } from "./components/PieChartAnalysis";
 import { COLORS } from "./Constants";
 import { Category } from "./Models";
-// import ResultsListItem from "./ResultItem";
-
+import Screenshot from "./components/Screenshot";
 
 const accessibilityData = {
   error: {
@@ -222,37 +220,31 @@ function ResultsList() {
       value: category.count,
       color: COLORS[key as keyof typeof COLORS],
     }));
+
   return (
-    <div className="max-w-2xl mx-auto p-1 bg-gray-900 rounded-2xl shadow-xl text-white">
-      <div className="max-w-4xl mx-auto">
+    <div className="max-w-6xl mx-auto p-1 bg-gray-900 rounded-2xl shadow-xl text-white">
+      <div className="max-w-full mx-auto">
         <h1 className="text-xl font-semibold p-4">
           Accessibility Analysis
         </h1>
 
-        {/* <div className="bg-white rounded-lg p-6 mb-8 shadow-sm">
-                    <PieChart data={pieData} />
-                </div> */}
-
-        <div className="space-y-4  p-4 overflow-y-auto h-[400px] scrollbar-thin">
+        <div className="space-y-4 p-4 overflow-y-auto h-[600px] scrollbar-thin">
+          <Screenshot url="https://wave.webaim.org/" />
 
           <PieChartAnalysis accessibilityData={accessibilityData} />
 
-          {/* <div className="space-y-4"> */}
-            {Object.entries(accessibilityData)
-              .filter((value: [string, Category]) => value[1].count > 0)
-              .map(([key, category]) => (
-                <AccessibilityAccordion
-                  key={key}
-                  title={category.description}
-                  count={category.count}
-                  items={category.items}
-                  color={COLORS[key as keyof typeof COLORS]}
-                />
-              ))}
-          {/* </div> */}
-
+          {Object.entries(accessibilityData)
+            .filter((value: [string, Category]) => value[1].count > 0)
+            .map(([key, category]) => (
+              <AccessibilityAccordion
+                key={key}
+                title={category.description}
+                count={category.count}
+                items={category.items}
+                color={COLORS[key as keyof typeof COLORS]}
+              />
+            ))}
         </div>
-
       </div>
     </div>
   );

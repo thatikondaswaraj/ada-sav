@@ -29,6 +29,61 @@ function App() {
   const [showProgress, setShowProgress] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [fetchResults, setFetchResults] = useState(true);
+  const [wsConnected, setWsConnected] = useState(false);
+
+  useEffect(() => {
+    let ws: WebSocket | null = null;
+    let reconnectAttempts = 0;
+    const maxReconnectAttempts = 3;
+    const reconnectDelay = 2000; // 2 seconds
+
+    const connectWebSocket = () => {
+      if (reconnectAttempts >= maxReconnectAttempts) {
+        console.log('Max reconnection attempts reached');
+        return;
+      }
+
+      try {
+        ws = new WebSocket("ws://localhost:8080");
+
+        ws.onopen = () => {
+          console.log("Connected to WebSocket");
+          setWsConnected(true);
+          reconnectAttempts = 0;
+        };
+
+        ws.onmessage = (event) => {
+          console.log("Received message:", event.data);
+        };
+
+        ws.onclose = () => {
+          console.log("Disconnected from WebSocket");
+          setWsConnected(false);
+          
+          // Attempt to reconnect
+          setTimeout(() => {
+            reconnectAttempts++;
+            connectWebSocket();
+          }, reconnectDelay);
+        };
+
+        ws.onerror = (error) => {
+          console.error("WebSocket error:", error);
+          ws?.close();
+        };
+      } catch (error) {
+        console.error("WebSocket connection error:", error);
+      }
+    };
+
+    connectWebSocket();
+
+    return () => {
+      if (ws) {
+        ws.close();
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (url && fetchResults) {
@@ -38,7 +93,7 @@ function App() {
 
         setLoading(false);
         setShowProgress(true);
-      }, 4000); // Simulating API call delay
+      }, 4000);
 
       setTimeout(() => {
         if(!fetchResults) return;
@@ -49,21 +104,10 @@ function App() {
     }
   }, [url, fetchResults]);
 
-  useEffect(() => {
-    const ws = new WebSocket("ws://localhost:8080");
-
-    ws.onopen = () => console.log("Connected to WebSocket");
-    ws.onmessage = (event) => console.log("Received message:", event.data);
-    ws.onclose = () => console.log("Disconnected from WebSocket");
-    ws.onerror = (error) => console.error("WebSocket error:", error);
-
-    return () => ws.close();
-  }, []);
-
   const handleUrlSet = (url: string) => {
     setUrl(url);
     setFetchResults(!!url);
-  }
+  };
 
   const handleBackEvent = () => {
     setUrl("");
@@ -71,10 +115,10 @@ function App() {
     setShowProgress(false);
     setShowResults(false);
     setFetchResults(false);
-  }
+  };
 
   return (
-    <div className="min-h-screen bg-white-900 flex flex-col items-center justify-center  relative overflow-hidden p-1">
+    <div className="min-h-screen bg-white-900 flex flex-col items-center justify-center relative overflow-hidden p-1">
       {/* Animated Search Input */}
       <motion.div
         initial={{
@@ -97,17 +141,17 @@ function App() {
         transition={{ duration: 0.5, ease: "easeInOut" }}
         className="absolute w-full max-w-4xl"
       >
-        <SearchInput searchedUrl={(url: string) => handleUrlSet(url)} onBack={handleBackEvent} />
+        <SearchInput searchedUrl={handleUrlSet} onBack={handleBackEvent} />
       </motion.div>
 
       {loading && (
         <div className="rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-gray-100">
-        <ScannerAnimation isScanning={true} />
-      </div>
+          <ScannerAnimation isScanning={true} />
+        </div>
       )}
 
       {/* Main Layout - Left (Progress List) & Right (Animated Loader) */}
-      <div className="w-full max-w-6xl flex mt-70">
+      <div className="w-full max-w-6xl flex mt-70 top-pos">
         {/* Progress List on Left */}
         {(!loading && showProgress || showResults) && (
           <motion.div
@@ -140,10 +184,8 @@ function App() {
             transition={{ duration: 0.5, ease: "easeOut" }}
           >
             <ResultsList />
-
           </motion.div>
         )}
-
       </div>
 
       {/* Background Elements */}
